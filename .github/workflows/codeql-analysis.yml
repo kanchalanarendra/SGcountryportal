@@ -1,0 +1,41 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ main, develop ]  # Trigger on these branches
+  pull_request:
+    branches: [ main, develop ]
+
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-latest  # Use Windows runner for C#
+    permissions:
+      actions: read
+      contents: read
+      security-events: write  # Required to upload CodeQL results
+
+    strategy:
+      matrix:
+        language: [ 'csharp' ]  # Language to scan
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'  # Adjust to your .NET version
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Build using dotnet
+      run: dotnet build --configuration Release
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
