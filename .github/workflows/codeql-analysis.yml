@@ -1,12 +1,10 @@
-name: "CodeQL"
+name: "CodeQL Scan"
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  schedule:
-    - cron: '0 0 * * 0'  # optional weekly scan
 
 jobs:
   analyze:
@@ -19,26 +17,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp' ]  # Or add more: ['csharp', 'javascript']
+        language: [ 'csharp' ]  # your language here
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ matrix.language }}
-        # 👇 This disables automatic dependency submission
-        tools: latest
-        config: |
-          disable-default-queries: false
-          packs:
-            - codeql/csharp-queries
-          # 👇 Opt out of dependency submission
-          dependency-submission: false
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+      - name: Build project
+        uses: github/codeql-action/autobuild@v3
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
