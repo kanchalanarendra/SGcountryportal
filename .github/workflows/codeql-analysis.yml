@@ -30,7 +30,7 @@ jobs:
         dotnet-version: '8.0.x'  # Adjust to your .NET version
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
 
@@ -38,4 +38,4 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v4
