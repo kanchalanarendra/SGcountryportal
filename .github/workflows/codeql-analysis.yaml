@@ -1,11 +1,7 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+  workflow_dispatch:
 
 jobs:
   analyze:
@@ -24,6 +20,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Count lines of C# code
+        run: |
+          lines=$(find . -name '*.cs' | xargs cat | wc -l)
+          echo "LINES_SCANNED=$lines" >> $GITHUB_ENV
+          echo "Lines of C# code scanned: $lines"
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
